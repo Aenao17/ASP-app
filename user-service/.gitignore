@@ -1,11 +1,20 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
 # Gradle
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
+**/build/
 
 # IntelliJ IDEA
-*.iml
 .idea/
+*.iml
+*.iws
+*.ipr
 out/
 
 # Logs
@@ -15,15 +24,12 @@ out/
 .DS_Store
 Thumbs.db
 
-# Java
-*.class
-
-# Environment files
+# Environment
 .env
 *.env
 
-# Node (în caz că folosești ceva npm)
-node_modules/
+# VS Code (dacă folosești și alt editor)
+.vscode/
 
-# Local config
-*.local
+# Database (doar dacă generezi fișiere temporare de la DB sau dumpuri)
+
