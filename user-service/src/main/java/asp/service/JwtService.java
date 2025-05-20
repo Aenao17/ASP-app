@@ -1,5 +1,6 @@
 package asp.service;
 
+import asp.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,7 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import asp.model.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -20,6 +20,7 @@ public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
+
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
 
@@ -32,7 +33,11 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject); // subject = userId
+    }
+
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -41,7 +46,10 @@ public class JwtService {
     }
 
     public String generateToken(User user, Long jti) {
-        return generateToken(new HashMap<>(), user, jti);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", user.getRole().name()); // 🟢 rolul e acum în token
+
+        return generateToken(extraClaims, user, jti);
     }
 
     public String generateToken(
@@ -58,8 +66,7 @@ public class JwtService {
             Long jti,
             long expiration
     ) {
-        return Jwts
-                .builder()
+        return Jwts.builder()
                 .setClaims(extraClaims)
                 .setId(jti.toString())
                 .setSubject(user.getId().toString())
@@ -82,9 +89,8 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)

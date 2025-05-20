@@ -25,20 +25,12 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
-            "/api/users/signup/**",
-            "/api/users/login/**",
-            "/api/users/logout/**",
-            "/api/users/signup",
-            "/api/users/login",
-            "/api/users/logout",
-            "/api/users",
-            "/api/users/token/**",
-            "/api/form",
-            "/api/form/**",
+            "/api/auth/**",
+            "/api/users/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

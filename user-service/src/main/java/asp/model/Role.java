@@ -5,5 +5,6 @@ public enum Role {
     ADMIN,
     CD,
     PM,
-    VOLUNTEER
+    VOLUNTEER,
+    USER
 }

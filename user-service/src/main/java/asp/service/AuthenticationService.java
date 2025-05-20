@@ -2,6 +2,8 @@ package asp.service;
 
 import asp.auth.AuthenticationRequest;
 import asp.auth.AuthenticationResponse;
+import asp.auth.RegisterRequest;
+import asp.model.Role;
 import asp.model.Token;
 import asp.model.TokenType;
 import asp.model.User;
@@ -38,6 +40,30 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthenticationResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .email(request.getEmail())
+                .institutionalEmail(request.getInstitutionalEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .phoneNumber(request.getPhoneNumber())
+                .role(request.getRole() != null ? request.getRole() : Role.USER)
+                .build();
+
+        var savedUser = userRepository.save(user);
+        var token = saveUserToken(savedUser);
+        var jwt = jwtService.generateToken(savedUser, token.getId());
+
+        return AuthenticationResponse.builder()
+                .token(jwt)
+                .build();
+    }
+
 
     private Token saveUserToken(User user) {
         var token = Token.builder()
