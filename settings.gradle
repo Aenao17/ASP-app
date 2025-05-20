@@ -1,3 +1,6 @@
 rootProject.name = 'App'
 
 include 'user-service'
+include 'volunteer-service'
+include 'warehouse-service'
+include 'task-service'
