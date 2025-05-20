@@ -6,6 +6,15 @@ spring:
       - database
 
 springdoc.swagger-ui.enable: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8081
+
 
 application:
   security:
